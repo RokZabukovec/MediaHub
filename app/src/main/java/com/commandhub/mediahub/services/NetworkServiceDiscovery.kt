@@ -5,7 +5,11 @@ import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.util.Log
 
-class NetworkServiceDiscovery(context: Context) {
+class NetworkServiceDiscovery(
+    context: Context,
+    private val onServerFound: (NsdServiceInfo) -> Unit,
+    private val onServerLost: (NsdServiceInfo) -> Unit
+) {
     private val nsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
     private val serviceName = "Media Server"
     private val serviceType = "_http._tcp."
@@ -27,17 +31,14 @@ class NetworkServiceDiscovery(context: Context) {
                     }
 
                     override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
-                        Log.e("NSD", "Resolve Succeeded. $serviceInfo")
-                        val port = serviceInfo.port
-                        val host = serviceInfo.host
-                        // Use the host and port to connect to the service
+                        onServerFound(serviceInfo)
                     }
                 })
             }
         }
 
         override fun onServiceLost(service: NsdServiceInfo) {
-            Log.e("NSD", "service lost: $service")
+            onServerLost(service)
         }
 
         override fun onDiscoveryStopped(serviceType: String) {
