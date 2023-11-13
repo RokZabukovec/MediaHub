@@ -10,7 +10,7 @@ import com.commandhub.mediahub.ui.pages.Home
 
 @Composable
 fun SetupNavGraph(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Screen.Home.route){
+    NavHost(navController = navController, startDestination = Screen.Content.route){
         composable(route = Screen.Home.route){
             Home(navController)
         }
